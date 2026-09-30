@@ -1,0 +1,1087 @@
+```html
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marcenaria Tradição - Mebel & Furnitur Custom</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    },
+                    colors: {
+                        wood: {
+                            50: '#fdfbf7',
+                            100: '#f7f1e5',
+                            200: '#eddcc3',
+                            300: '#dfbf99',
+                            400: '#cf9e6e',
+                            500: '#bd7f48',
+                            600: '#a36438',
+                            700: '#834b2f',
+                            800: '#6d3d2a',
+                            900: '#4a291d',
+                            950: '#2b150e',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        html { scroll-behavior: smooth; }
+        
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f7f1e5; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #834b2f; 
+            border-radius: 5px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #4a291d; 
+        }
+
+        /* Wood vector pattern background */
+        .wood-pattern-bg {
+            background-color: #4a291d;
+            background-image: radial-gradient(#6d3d2a 1.5px, transparent 1.5px), radial-gradient(#6d3d2a 1.5px, #4a291d 1.5px);
+            background-size: 60px 60px;
+            background-position: 0 0, 30px 30px;
+        }
+
+        /* Tab active state transitions */
+        .tab-btn.active {
+            background-color: #834b2f;
+            color: #ffffff;
+            border-color: #834b2f;
+            box-shadow: 0 4px 12px rgba(131, 75, 47, 0.25);
+        }
+
+        /* Toast notification styling */
+        #toast {
+            visibility: hidden;
+            min-width: 280px;
+            background-color: #2b150e;
+            color: #fff;
+            text-align: center;
+            border-radius: 8px;
+            padding: 16px;
+            position: fixed;
+            z-index: 100;
+            left: 50%;
+            bottom: 30px;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.3s, visibility 0.3s;
+            border: 1px solid #bd7f48;
+        }
+        #toast.show {
+            visibility: visible;
+            opacity: 1;
+        }
+    </style>
+</head>
+<body class="font-sans text-gray-800 bg-stone-50 flex flex-col min-h-screen">
+
+    <!-- Top Bar with Legal Info -->
+    <div class="bg-wood-950 text-wood-200 text-xs py-2 border-b border-wood-900">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-center gap-2">
+            <div class="flex items-center gap-4">
+                <span><i class="fa-solid fa-building text-wood-400 mr-1.5"></i> Movelaria Tradição LTDA</span>
+                <span class="hidden md:inline">•</span>
+                <span class="hidden md:inline"><i class="fa-solid fa-id-card text-wood-400 mr-1.5"></i> CNPJ: 00.799.330/0001-99</span>
+            </div>
+            <div class="flex items-center gap-2">
+                <i class="fa-solid fa-location-dot text-wood-400"></i>
+                <span>Rua Washington de Souza Carvalho, 8 - Londrina/PR</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Navigation Header -->
+    <header class="bg-white shadow-md sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                
+                <!-- Logo -->
+                <a href="#" onclick="switchTab('inicio')" class="flex items-center gap-3 group">
+                    <div class="w-11 h-11 bg-wood-800 text-white rounded-lg flex items-center justify-center text-2xl group-hover:bg-wood-600 transition-colors shadow-inner">
+                        <i class="fa-solid fa-compass-drafting"></i>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="font-serif font-bold text-2xl text-wood-950 tracking-tight leading-none">Marcenaria Tradição</span>
+                        <span class="text-[0.65rem] text-wood-700 uppercase tracking-widest font-semibold mt-1">Desain • Produksi • Penjualan • Pemasangan</span>
+                    </div>
+                </a>
+
+                <!-- Desktop Navigation Tabs -->
+                <nav class="hidden md:flex items-center space-x-2 bg-stone-100 p-1.5 rounded-xl border border-stone-200">
+                    <button onclick="switchTab('inicio')" id="nav-inicio" class="tab-btn active px-4 py-2 rounded-lg text-sm font-semibold transition-all flex items-center gap-2 text-stone-700 hover:text-wood-900">
+                        <i class="fa-solid fa-house text-xs"></i> Beranda
+                    </button>
+                    <button onclick="switchTab('produtos')" id="nav-produtos" class="tab-btn px-4 py-2 rounded-lg text-sm font-semibold transition-all flex items-center gap-2 text-stone-700 hover:text-wood-900">
+                        <i class="fa-solid fa-couch text-xs"></i> Daftar Produk
+                    </button>
+                    <button onclick="switchTab('maodeobra')" id="nav-maodeobra" class="tab-btn px-4 py-2 rounded-lg text-sm font-semibold transition-all flex items-center gap-2 text-stone-700 hover:text-wood-900">
+                        <i class="fa-solid fa-hammer text-xs"></i> Biaya Tenaga Kerja
+                    </button>
+                    <button onclick="switchTab('pedido')" id="nav-pedido" class="tab-btn px-4 py-2 rounded-lg text-sm font-semibold transition-all flex items-center gap-2 text-stone-700 hover:text-wood-900">
+                        <i class="fa-solid fa-paper-plane text-xs"></i> Buat Pesanan
+                    </button>
+                </nav>
+
+                <!-- Mobile Menu Button -->
+                <button id="mobile-menu-btn" class="md:hidden text-wood-900 p-2 rounded-lg hover:bg-stone-100">
+                    <i class="fa-solid fa-bars text-2xl"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Dropdown Navigation -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-stone-200 px-4 py-3 space-y-2 shadow-lg">
+            <button onclick="switchTab('inicio'); toggleMobileMenu()" class="w-full text-left px-4 py-3 rounded-lg text-sm font-bold flex items-center gap-3 text-stone-700 hover:bg-wood-100 hover:text-wood-900">
+                <i class="fa-solid fa-house w-5 text-wood-700"></i> Beranda & Profil
+            </button>
+            <button onclick="switchTab('produtos'); toggleMobileMenu()" class="w-full text-left px-4 py-3 rounded-lg text-sm font-bold flex items-center gap-3 text-stone-700 hover:bg-wood-100 hover:text-wood-900">
+                <i class="fa-solid fa-couch w-5 text-wood-700"></i> Katalog Furnitur Lengkap
+            </button>
+            <button onclick="switchTab('maodeobra'); toggleMobileMenu()" class="w-full text-left px-4 py-3 rounded-lg text-sm font-bold flex items-center gap-3 text-stone-700 hover:bg-wood-100 hover:text-wood-900">
+                <i class="fa-solid fa-hammer w-5 text-wood-700"></i> Tabel Biaya Tenaga Kerja
+            </button>
+            <button onclick="switchTab('pedido'); toggleMobileMenu()" class="w-full text-left px-4 py-3 rounded-lg text-sm font-bold flex items-center gap-3 bg-wood-700 text-white hover:bg-wood-800">
+                <i class="fa-solid fa-paper-plane w-5"></i> Pesan Langsung di Situs
+            </button>
+        </div>
+    </header>
+
+    <!-- Content Sections / Tabs Container -->
+    <main class="flex-grow">
+
+        <!-- TAB 1: INÍCIO (BERANDA) -->
+        <section id="tab-content-inicio" class="tab-content block">
+            
+            <!-- Hero Banner -->
+            <div class="wood-pattern-bg text-white py-20 border-b-4 border-wood-600">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="max-w-3xl space-y-6">
+                        <div class="inline-flex items-center gap-2 bg-wood-800/80 backdrop-blur border border-wood-500/40 px-3.5 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wider text-wood-200">
+                            <i class="fa-solid fa-certificate text-wood-400"></i> Tradição & Keunggulan Mebel Kayu
+                        </div>
+                        <h1 class="text-3xl sm:text-5xl font-serif font-bold text-white leading-tight">
+                            Furnitur Custom Berkualitas Tinggi dengan Sentuhan Kerajinan Kayu
+                        </h1>
+                        <p class="text-stone-300 text-lg font-light leading-relaxed">
+                            Spesialis dalam <strong class="text-white font-medium">Desain, Produksi, Penjualan, dan Pemasangan</strong> furnitur hunian dan perkantoran. Kami mewujudkan ruangan impian Anda dengan presisi tinggi dan bahan berkekuatan unggul.
+                        </p>
+                        <div class="flex flex-col sm:flex-row gap-4 pt-4">
+                            <button onclick="switchTab('produtos')" class="bg-wood-500 hover:bg-wood-600 text-white font-bold px-8 py-3.5 rounded-xl shadow-lg transition-all flex items-center justify-center gap-3 text-base border border-wood-400/30">
+                                <i class="fa-solid fa-list-check"></i> Lihat Daftar Furnitur
+                            </button>
+                            <button onclick="switchTab('pedido')" class="bg-stone-900/80 hover:bg-stone-900 text-white font-semibold px-8 py-3.5 rounded-xl transition-all border border-stone-700/60 flex items-center justify-center gap-3 text-base">
+                                <i class="fa-solid fa-file-pen"></i> Minta Penawaran Langsung
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pillars / Services -->
+            <div class="py-16 bg-white">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="text-center max-w-2xl mx-auto mb-12">
+                        <h2 class="text-2xl sm:text-3xl font-serif font-bold text-wood-950 mb-3">Tahapan Pengerjaan Kami</h2>
+                        <p class="text-stone-600">Kami mengawal proyek Anda dari awal hingga akhir dengan standar teknis ketat dan tim berpengalaman.</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                        <div class="bg-stone-50 p-6 rounded-2xl border border-stone-200 text-center hover:border-wood-500 transition-all">
+                            <div class="w-16 h-16 bg-wood-100 text-wood-800 rounded-xl flex items-center justify-center text-2xl mx-auto mb-4 border border-wood-200">
+                                <i class="fa-solid fa-pencil-ruler"></i>
+                            </div>
+                            <h3 class="font-bold text-lg text-stone-900 mb-2">1. Desain</h3>
+                            <p class="text-stone-600 text-sm">Pengembangan rancangan yang disesuaikan dengan dimensi ruangan dan kebutuhan fungsi Anda.</p>
+                        </div>
+
+                        <div class="bg-stone-50 p-6 rounded-2xl border border-stone-200 text-center hover:border-wood-500 transition-all">
+                            <div class="w-16 h-16 bg-wood-100 text-wood-800 rounded-xl flex items-center justify-center text-2xl mx-auto mb-4 border border-wood-200">
+                                <i class="fa-solid fa-saw-blade"></i>
+                            </div>
+                            <h3 class="font-bold text-lg text-stone-900 mb-2">2. Produksi</h3>
+                            <p class="text-stone-600 text-sm">Pemotongan presisi, pengeliman tepi, pembentukan, dan perakitan presisi di bengkel kayu kami.</p>
+                        </div>
+
+                        <div class="bg-stone-50 p-6 rounded-2xl border border-stone-200 text-center hover:border-wood-500 transition-all">
+                            <div class="w-16 h-16 bg-wood-100 text-wood-800 rounded-xl flex items-center justify-center text-2xl mx-auto mb-4 border border-wood-200">
+                                <i class="fa-solid fa-handshake font-bold"></i>
+                            </div>
+                            <h3 class="font-bold text-lg text-stone-900 mb-2">3. Penjualan</h3>
+                            <p class="text-stone-600 text-sm">Layanan langsung melalui portal web resmi, menjamin transparansi biaya tanpa perantara.</p>
+                        </div>
+
+                        <div class="bg-stone-50 p-6 rounded-2xl border border-stone-200 text-center hover:border-wood-500 transition-all">
+                            <div class="w-16 h-16 bg-wood-100 text-wood-800 rounded-xl flex items-center justify-center text-2xl mx-auto mb-4 border border-wood-200">
+                                <i class="fa-solid fa-screws-tilting"></i>
+                            </div>
+                            <h3 class="font-bold text-lg text-stone-900 mb-2">4. Pemasangan</h3>
+                            <p class="text-stone-600 text-sm">Instalasi rapi, tepat waktu, serta keselarasan sempurna yang dikerjakan oleh profesional.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sobre A Marcenaria -->
+            <div class="py-16 bg-stone-100 border-t border-stone-200">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="bg-white rounded-2xl p-8 sm:p-12 border border-stone-200 shadow-sm flex flex-col md:flex-row gap-8 items-center">
+                        <div class="w-full md:w-1/3 text-center md:text-left">
+                            <div class="inline-block p-4 bg-wood-100 rounded-2xl mb-4 text-wood-800">
+                                <i class="fa-solid fa-tree text-5xl"></i>
+                            </div>
+                            <h3 class="text-2xl font-serif font-bold text-wood-950">Movelaria Tradição</h3>
+                            <p class="text-xs text-wood-700 font-bold uppercase tracking-wider mt-1">CNPJ: 00.799.330/0001-99</p>
+                        </div>
+                        <div class="w-full md:w-2/3 space-y-4 text-stone-600">
+                            <p class="leading-relaxed">
+                                Berbekal pengalaman bertahun-tahun di industri perabotan kustom, Marcenaria Tradição berkomitmen memberikan kualitas terbaik dari konsultasi awal hingga penyelesaian akhir. 
+                            </p>
+                            <p class="leading-relaxed">
+                                Pusat administrasi dan bengkel produksi kami berlokasi di <strong class="text-stone-900">Rua Washington de Souza Carvalho, nº 8 - Parque Industrial José Belinati, Londrina/PR</strong>. Seluruh proses pesanan dan konsultasi dapat Anda kelola secara langsung secara online.
+                            </p>
+                            <div class="pt-2">
+                                <button onclick="switchTab('pedido')" class="text-wood-700 font-bold hover:text-wood-900 transition-colors inline-flex items-center gap-2 border-b-2 border-wood-700 pb-0.5">
+                                    Buka formulir pemesanan online <i class="fa-solid fa-arrow-right text-xs"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- TAB 2: LISTA COMPLETA DE PRODUTOS (DAFTAR PRODUK) -->
+        <section id="tab-content-produtos" class="tab-content hidden py-12">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                
+                <!-- Section Header -->
+                <div class="bg-wood-900 text-white rounded-2xl p-8 mb-10 shadow-lg border border-wood-800">
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+                        <div>
+                            <span class="text-xs font-bold text-wood-300 uppercase tracking-widest block mb-1">Katalog Produk • Penjualan Langsung</span>
+                            <h2 class="text-3xl font-serif font-bold text-white">Daftar Furnitur yang Diproduksi</h2>
+                            <p class="text-wood-200 text-sm mt-2 max-w-2xl leading-relaxed">
+                                Pilih salah satu model di bawah ini untuk mengontrak pembuatan kustom sesuai dimensi ruangan Anda. Semua estimasi mencakup biaya bahan material serta jasa pembuatan/pemasangan.
+                            </p>
+                        </div>
+                        <button onclick="switchTab('pedido')" class="bg-wood-500 hover:bg-wood-600 text-white font-bold px-6 py-3 rounded-xl transition-all shadow shrink-0 text-sm flex items-center gap-2">
+                            <i class="fa-solid fa-pen-to-square"></i> Pesanan Kustom Baru
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Environment Categories -->
+                <div class="space-y-8">
+
+                    <!-- CATEGORIA 1: KITCHEN (DAPUR) -->
+                    <div class="bg-white rounded-2xl border border-stone-200 shadow-sm overflow-hidden">
+                        <div class="bg-stone-100 px-6 py-4 border-b border-stone-200 flex items-center gap-3">
+                            <div class="w-10 h-10 bg-wood-700 text-white rounded-lg flex items-center justify-center text-lg">
+                                <i class="fa-solid fa-utensils"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-serif font-bold text-xl text-stone-900">Furnitur Dapur</h3>
+                                <p class="text-xs text-stone-500">Kabinet, ilha, meja counter, dan lemari piring berbahan MDF densitas tinggi</p>
+                            </div>
+                        </div>
+
+                        <div class="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            
+                            <!-- Item 1.1 -->
+                            <div class="border border-stone-200 rounded-xl p-5 hover:border-wood-500 transition-all flex flex-col justify-between bg-stone-50/50">
+                                <div>
+                                    <div class="flex justify-between items-start mb-3">
+                                        <h4 class="font-bold text-stone-900 text-lg">Set Dapur MDF Freijó (3 Meter)</h4>
+                                        <span class="bg-wood-100 text-wood-800 text-[0.7rem] font-bold px-2 py-1 rounded-md uppercase">Populer</span>
+                                    </div>
+                                    <p class="text-xs text-stone-600 mb-4 leading-relaxed">
+                                        Kabinet gantung ganda dengan damper peredam, kabinet bawah kokoh, laci teleskopik, dan ceruk khusus oven/mikrowave.
+                                    </p>
+                                    <div class="bg-white p-3 rounded-lg border border-stone-200 text-xs space-y-1.5 mb-4">
+                                        <div class="flex justify-between text-stone-600">
+                                            <span>MDF + Aksesori Premium:</span>
+                                            <span class="font-semibold text-stone-800">R$ 5.800,00</span>
+                                        </div>
+                                        <div class="flex justify-between text-stone-600">
+                                            <span>Jasa Pembuatan & Pemasangan:</span>
+                                            <span class="font-semibold text-stone-800">R$ 2.400,00</span>
+                                        </div>
+                                        <div class="flex justify-between font-bold text-stone-900 border-t pt-1.5 text-sm">
+                                            <span>Total Estimasi Biaya:</span>
+                                            <span class="text-wood-700">R$ 8.200,00</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button onclick="selectProductForOrder('Set Dapur MDF Freijó (3m) - R$ 8.200,00')" class="w-full bg-wood-700 hover:bg-wood-800 text-white font-semibold py-2 rounded-lg text-xs transition-colors flex items-center justify-center gap-2">
+                                    <i class="fa-solid fa-cart-plus"></i> Pesan Model Ini
+                                </button>
+                            </div>
+
+                            <!-- Item 1.2 -->
+                            <div class="border border-stone-200 rounded-xl p-5 hover:border-wood-500 transition-all flex flex-col justify-between bg-stone-50/50">
+                                <div>
+                                    <div class="flex justify-between items-start mb-3">
+                                        <h4 class="font-bold text-stone-900 text-lg">Kabinet Dapur Bentuk L + Island</h4>
+                                        <span class="bg-stone-200 text-stone-700 text-[0.7rem] font-bold px-2 py-1 rounded-md uppercase">Desain Custom</span>
+                                    </div>
+                                    <p class="text-xs text-stone-600 mb-4 leading-relaxed">
+                                        Kabinet modular sudut L lengkap dengan island tengah berbahan kayu, pegangan profil aluminium, dan tempat sampah terintegrasi.
+                                    </p>
+                                    <div class="bg-white p-3 rounded-lg border border-stone-200 text-xs space-y-1.5 mb-4">
+                                        <div class="flex justify-between text-stone-600">
+                                            <span>MDF + Aksesori Premium:</span>
+                                            <span class="font-semibold text-stone-800">R$ 6.900,00</span>
+                                        </div>
+                                        <div class="flex justify-between text-stone-600">
+                                            <span>Jasa Pembuatan & Pemasangan:</span>
+                                            <span class="font-semibold text-stone-800">R$ 2.900,00</span>
+                                        </div>
+                                        <div class="flex justify-between font-bold text-stone-900 border-t pt-1.5 text-sm">
+                                            <span>Total Estimasi Biaya:</span>
+                                            <span class="text-wood-700">R$ 9.800,00</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button onclick="selectProductForOrder('Kabinet Dapur Bentuk L + Island - R$ 9.800,00')" class="w-full bg-wood-700 hover:bg-wood-800 text-white font-semibold py-2 rounded-lg text-xs transition-colors flex items-center justify-center gap-2">
+                                    <i class="fa-solid fa-cart-plus"></i> Pesan Model Ini
+                                </button>
+                            </div>
+
+                            <!-- Item 1.3 -->
+                            <div class="border border-stone-200 rounded-xl p-5 hover:border-wood-500 transition-all flex flex-col justify-between bg-stone-50/50">
+                                <div>
+                                    <div class="flex justify-between items-start mb-3">
+                                        <h4 class="font-bold text-stone-900 text-lg">Lemari Gantung Dapur Kompak</h4>
+                                        <span class="bg-stone-200 text-stone-700 text-[0.7rem] font-bold px-2 py-1 rounded-md uppercase">Kompak</span>
+                                    </div>
+                                    <p class="text-xs text-stone-600 mb-4 leading-relaxed">
+                                        Lemari gantung sepanjang 2 meter dengan pintu hidrolik pegas gas serta rak dalam yang dapat disesuaikan tingginya.
+                                    </p>
+                                    <div class="bg-white p-3 rounded-lg border border-stone-200 text-xs space-y-1.5 mb-4">
+                                        <div class="flex justify-between text-stone-600">
+                                            <span>MDF + Aksesori:</span>
+                                            <span class="font-semibold text-stone-800">R$ 1.900,00</span>
+                                        </div>
+                                        <div class="flex justify-between text-stone-600">
+                                            <span>Jasa Pembuatan & Pemasangan:</span>
+                                            <span class="font-semibold text-stone-800">R$ 800,00</span>
+                                        </div>
+                                        <div class="flex justify-between font-bold text-stone-900 border-t pt-1.5 text-sm">
+                                            <span>Total Estimasi Biaya:</span>
+                                            <span class="text-wood-700">R$ 2.700,00</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button onclick="selectProductForOrder('Lemari Gantung Dapur Kompak - R$ 2.700,00')" class="w-full bg-wood-700 hover:bg-wood-800 text-white font-semibold py-2 rounded-lg text-xs transition-colors flex items-center justify-center gap-2">
+                                    <i class="fa-solid fa-cart-plus"></i> Pesan Model Ini
+                                </button>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- CATEGORIA 2: BEDROOMS & CLOSETS -->
+                    <div class="bg-white rounded-2xl border border-stone-200 shadow-sm overflow-hidden">
+                        <div class="bg-stone-100 px-6 py-4 border-b border-stone-200 flex items-center gap-3">
+                            <div class="w-10 h-10 bg-wood-700 text-white rounded-lg flex items-center justify-center text-lg">
+                                <i class="fa-solid fa-bed"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-serif font-bold text-xl text-stone-900">Mebel Kamar Tidur & Closet</h3>
+                                <p class="text-xs text-stone-500">Lemari pakaian, walk-in closet terbuka, tempat tidur storage, dan meja nakas</p>
+                            </div>
+                        </div>
+
+                        <div class="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            
+                            <!-- Item 2.1 -->
+                            <div class="border border-stone-200 rounded-xl p-5 hover:border-wood-500 transition-all flex flex-col justify-between bg-stone-50/50">
+                                <div>
+                                    <div class="flex justify-between items-start mb-3">
+                                        <h4 class="font-bold text-stone-900 text-lg">Lemari Pakaian 4 Pintu Geser</h4>
+                                        <span class="bg-wood-100 text-wood-800 text-[0.7rem] font-bold px-2 py-1 rounded-md uppercase">Unggulan</span>
+                                    </div>
+                                    <p class="text-xs text-stone-600 mb-4 leading-relaxed">
+                                        Sistem roda dengan pengereman halus, pintu tengah berkonsep cermin full, rak sepatu sliding, dan 8 laci dalam.
+                                    </p>
+                                    <div class="bg-white p-3 rounded-lg border border-stone-200 text-xs space-y-1.5 mb-4">
+                                        <div class="flex justify-between text-stone-600">
+                                            <span>MDF + Cermin + Aksesori:</span>
+                                            <span class="font-semibold text-stone-800">R$ 6.200,00</span>
+                                        </div>
+                                        <div class="flex justify-between text-stone-600">
+                                            <span>Jasa Pembuatan & Pemasangan:</span>
+                                            <span class="font-semibold text-stone-800">R$ 2.300,00</span>
+                                        </div>
+                                        <div class="flex justify-between font-bold text-stone-900 border-t pt-1.5 text-sm">
+                                            <span>Total Estimasi Biaya:</span>
+                                            <span class="text-wood-700">R$ 8.500,00</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button onclick="selectProductForOrder('Lemari Pakaian 4 Pintu Geser - R$ 8.500,00')" class="w-full bg-wood-700 hover:bg-wood-800 text-white font-semibold py-2 rounded-lg text-xs transition-colors flex items-center justify-center gap-2">
+                                    <i class="fa-solid fa-cart-plus"></i> Pesan Model Ini
+                                </button>
+                            </div>
+
+                            <!-- Item 2.2 -->
+                            <div class="border border-stone-200 rounded-xl p-5 hover:border-wood-500 transition-all flex flex-col justify-between bg-stone-50/50">
+                                <div>
+                                    <div class="flex justify-between items-start mb-3">
+                                        <h4 class="font-bold text-stone-900 text-lg">Closet Terbuka Moduler Bentuk U</h4>
+                                        <span class="bg-stone-200 text-stone-700 text-[0.7rem] font-bold px-2 py-1 rounded-md uppercase">Tanpa Pintu</span>
+                                    </div>
+                                    <p class="text-xs text-stone-600 mb-4 leading-relaxed">
+                                        Closet konsep terbuka serbaguna dengan gantungan baju aluminium oval, laci pembagi aksesoris, dan sekat khusus.
+                                    </p>
+                                    <div class="bg-white p-3 rounded-lg border border-stone-200 text-xs space-y-1.5 mb-4">
+                                        <div class="flex justify-between text-stone-600">
+                                            <span>MDF + Aluminium:</span>
+                                            <span class="font-semibold text-stone-800">R$ 5.100,00</span>
+                                        </div>
+                                        <div class="flex justify-between text-stone-600">
+                                            <span>Jasa Pembuatan & Pemasangan:</span>
+                                            <span class="font-semibold text-stone-800">R$ 2.100,00</span>
+                                        </div>
+                                        <div class="flex justify-between font-bold text-stone-900 border-t pt-1.5 text-sm">
+                                            <span>Total Estimasi Biaya:</span>
+                                            <span class="text-wood-700">R$ 7.200,00</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button onclick="selectProductForOrder('Closet Terbuka Moduler Bentuk U - R$ 7.200,00')" class="w-full bg-wood-700 hover:bg-wood-800 text-white font-semibold py-2 rounded-lg text-xs transition-colors flex items-center justify-center gap-2">
+                                    <i class="fa-solid fa-cart-plus"></i> Pesan Model Ini
+                                </button>
+                            </div>
+
+                            <!-- Item 2.3 -->
+                            <div class="border border-stone-200 rounded-xl p-5 hover:border-wood-500 transition-all flex flex-col justify-between bg-stone-50/50">
+                                <div>
+                                    <div class="flex justify-between items-start mb-3">
+                                        <h4 class="font-bold text-stone-900 text-lg">Headboard Kayu Salur + Nakas</h4>
+                                        <span class="bg-stone-200 text-stone-700 text-[0.7rem] font-bold px-2 py-1 rounded-md uppercase">Desain Modern</span>
+                                    </div>
+                                    <p class="text-xs text-stone-600 mb-4 leading-relaxed">
+                                        Panel dinding bermotif kisi-kisi salur dengan pencahayaan LED terintegrasi dan 2 meja nakas gantung di kedua sisi.
+                                    </p>
+                                    <div class="bg-white p-3 rounded-lg border border-stone-200 text-xs space-y-1.5 mb-4">
+                                        <div class="flex justify-between text-stone-600">
+                                            <span>MDF Salur + Lampu LED:</span>
+                                            <span class="font-semibold text-stone-800">R$ 2.100,00</span>
+                                        </div>
+                                        <div class="flex justify-between text-stone-600">
+                                            <span>Jasa Pembuatan & Pemasangan:</span>
+                                            <span class="font-semibold text-stone-800">R$ 900,00</span>
+                                        </div>
+                                        <div class="flex justify-between font-bold text-stone-900 border-t pt-1.5 text-sm">
+                                            <span>Total Estimasi Biaya:</span>
+                                            <span class="text-wood-700">R$ 3.000,00</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button onclick="selectProductForOrder('Headboard Kayu Salur + Nakas - R$ 3.000,00')" class="w-full bg-wood-700 hover:bg-wood-800 text-white font-semibold py-2 rounded-lg text-xs transition-colors flex items-center justify-center gap-2">
+                                    <i class="fa-solid fa-cart-plus"></i> Pesan Model Ini
+                                </button>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- CATEGORIA 3: LIVING ROOM -->
+                    <div class="bg-white rounded-2xl border border-stone-200 shadow-sm overflow-hidden">
+                        <div class="bg-stone-100 px-6 py-4 border-b border-stone-200 flex items-center gap-3">
+                            <div class="w-10 h-10 bg-wood-700 text-white rounded-lg flex items-center justify-center text-lg">
+                                <i class="fa-solid fa-couch"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-serif font-bold text-xl text-stone-900">Mebel Ruang Tamu & Keluarga</h3>
+                                <p class="text-xs text-stone-500">Panel TV, rak gantung, meja credenza/buffet, dan lemari pajangan</p>
+                            </div>
+                        </div>
+
+                        <div class="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            
+                            <!-- Item 3.1 -->
+                            <div class="border border-stone-200 rounded-xl p-5 hover:border-wood-500 transition-all flex flex-col justify-between bg-stone-50/50">
+                                <div>
+                                    <div class="flex justify-between items-start mb-3">
+                                        <h4 class="font-bold text-stone-900 text-lg">Panel TV Salur + Rak Gantung</h4>
+                                        <span class="bg-wood-100 text-wood-800 text-[0.7rem] font-bold px-2 py-1 rounded-md uppercase">Terlaris</span>
+                                    </div>
+                                    <p class="text-xs text-stone-600 mb-4 leading-relaxed">
+                                        Panel latar TV motif kayu dengan penerangan strip LED tersembunyi, rak gantung bawah, dan jalur kabel tersembunyi.
+                                    </p>
+                                    <div class="bg-white p-3 rounded-lg border border-stone-200 text-xs space-y-1.5 mb-4">
+                                        <div class="flex justify-between text-stone-600">
+                                            <span>MDF + Sistem LED:</span>
+                                            <span class="font-semibold text-stone-800">R$ 2.500,00</span>
+                                        </div>
+                                        <div class="flex justify-between text-stone-600">
+                                            <span>Jasa Pembuatan & Pemasangan:</span>
+                                            <span class="font-semibold text-stone-800">R$ 1.100,00</span>
+                                        </div>
+                                        <div class="flex justify-between font-bold text-stone-900 border-t pt-1.5 text-sm">
+                                            <span>Total Estimasi Biaya:</span>
+                                            <span class="text-wood-700">R$ 3.600,00</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button onclick="selectProductForOrder('Panel TV Salur + Rak Gantung - R$ 3.600,00')" class="w-full bg-wood-700 hover:bg-wood-800 text-white font-semibold py-2 rounded-lg text-xs transition-colors flex items-center justify-center gap-2">
+                                    <i class="fa-solid fa-cart-plus"></i> Pesan Model Ini
+                                </button>
+                            </div>
+
+                            <!-- Item 3.2 -->
+                            <div class="border border-stone-200 rounded-xl p-5 hover:border-wood-500 transition-all flex flex-col justify-between bg-stone-50/50">
+                                <div>
+                                    <div class="flex justify-between items-start mb-3">
+                                        <h4 class="font-bold text-stone-900 text-lg">Meja Buffet Credenza Elegance</h4>
+                                        <span class="bg-stone-200 text-stone-700 text-[0.7rem] font-bold px-2 py-1 rounded-md uppercase">Credenza</span>
+                                    </div>
+                                    <p class="text-xs text-stone-600 mb-4 leading-relaxed">
+                                        Credenza ruang makan/keluarga 4 pintu finish duco/kayu, kaki kayu solid miring, dan laci sendok terintegrasi.
+                                    </p>
+                                    <div class="bg-white p-3 rounded-lg border border-stone-200 text-xs space-y-1.5 mb-4">
+                                        <div class="flex justify-between text-stone-600">
+                                            <span>MDF + Kayu Solid:</span>
+                                            <span class="font-semibold text-stone-800">R$ 1.800,00</span>
+                                        </div>
+                                        <div class="flex justify-between text-stone-600">
+                                            <span>Jasa Pembuatan & Pemasangan:</span>
+                                            <span class="font-semibold text-stone-800">R$ 700,00</span>
+                                        </div>
+                                        <div class="flex justify-between font-bold text-stone-900 border-t pt-1.5 text-sm">
+                                            <span>Total Estimasi Biaya:</span>
+                                            <span class="text-wood-700">R$ 2.500,00</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button onclick="selectProductForOrder('Meja Buffet Credenza Elegance - R$ 2.500,00')" class="w-full bg-wood-700 hover:bg-wood-800 text-white font-semibold py-2 rounded-lg text-xs transition-colors flex items-center justify-center gap-2">
+                                    <i class="fa-solid fa-cart-plus"></i> Pesan Model Ini
+                                </button>
+                            </div>
+
+                            <!-- Item 3.3 -->
+                            <div class="border border-stone-200 rounded-xl p-5 hover:border-wood-500 transition-all flex flex-col justify-between bg-stone-50/50">
+                                <div>
+                                    <div class="flex justify-between items-start mb-3">
+                                        <h4 class="font-bold text-stone-900 text-lg">Rak Buku Dinding Tinggi</h4>
+                                        <span class="bg-stone-200 text-stone-700 text-[0.7rem] font-bold px-2 py-1 rounded-md uppercase">Perpustakaan</span>
+                                    </div>
+                                    <p class="text-xs text-stone-600 mb-4 leading-relaxed">
+                                        Rak penyimpanan buku dan pajangan dari lantai hingga langit-langit dengan variasi kompartemen dan spot LED.
+                                    </p>
+                                    <div class="bg-white p-3 rounded-lg border border-stone-200 text-xs space-y-1.5 mb-4">
+                                        <div class="flex justify-between text-stone-600">
+                                            <span>MDF Tebal 25mm:</span>
+                                            <span class="font-semibold text-stone-800">R$ 3.100,00</span>
+                                        </div>
+                                        <div class="flex justify-between text-stone-600">
+                                            <span>Jasa Pembuatan & Pemasangan:</span>
+                                            <span class="font-semibold text-stone-800">R$ 1.300,00</span>
+                                        </div>
+                                        <div class="flex justify-between font-bold text-stone-900 border-t pt-1.5 text-sm">
+                                            <span>Total Estimasi Biaya:</span>
+                                            <span class="text-wood-700">R$ 4.400,00</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button onclick="selectProductForOrder('Rak Buku Dinding Tinggi - R$ 4.400,00')" class="w-full bg-wood-700 hover:bg-wood-800 text-white font-semibold py-2 rounded-lg text-xs transition-colors flex items-center justify-center gap-2">
+                                    <i class="fa-solid fa-cart-plus"></i> Pesan Model Ini
+                                </button>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- CATEGORIA 4: OFFICE & BATHROOM -->
+                    <div class="bg-white rounded-2xl border border-stone-200 shadow-sm overflow-hidden">
+                        <div class="bg-stone-100 px-6 py-4 border-b border-stone-200 flex items-center gap-3">
+                            <div class="w-10 h-10 bg-wood-700 text-white rounded-lg flex items-center justify-center text-lg">
+                                <i class="fa-solid fa-laptop-house"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-serif font-bold text-xl text-stone-900">Mebel Kantor & Kamar Mandi</h3>
+                                <p class="text-xs text-stone-500">Meja kerja home office, lemari arsip, dan kabinet wastafel tahan air</p>
+                            </div>
+                        </div>
+
+                        <div class="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            
+                            <!-- Item 4.1 -->
+                            <div class="border border-stone-200 rounded-xl p-5 hover:border-wood-500 transition-all flex flex-col justify-between bg-stone-50/50">
+                                <div>
+                                    <div class="flex justify-between items-start mb-3">
+                                        <h4 class="font-bold text-stone-900 text-lg">Meja Kerja L Home Office + Laci</h4>
+                                        <span class="bg-wood-100 text-wood-800 text-[0.7rem] font-bold px-2 py-1 rounded-md uppercase">Home Office</span>
+                                    </div>
+                                    <p class="text-xs text-stone-600 mb-4 leading-relaxed">
+                                        Meja kerja ergonomis dengan grommet kabel, kabinet laci terkunci, serta rak gantung atas untuk berkas.
+                                    </p>
+                                    <div class="bg-white p-3 rounded-lg border border-stone-200 text-xs space-y-1.5 mb-4">
+                                        <div class="flex justify-between text-stone-600">
+                                            <span>MDF + Rel Laci Kantor:</span>
+                                            <span class="font-semibold text-stone-800">R$ 1.700,00</span>
+                                        </div>
+                                        <div class="flex justify-between text-stone-600">
+                                            <span>Jasa Pembuatan & Pemasangan:</span>
+                                            <span class="font-semibold text-stone-800">R$ 750,00</span>
+                                        </div>
+                                        <div class="flex justify-between font-bold text-stone-900 border-t pt-1.5 text-sm">
+                                            <span>Total Estimasi Biaya:</span>
+                                            <span class="text-wood-700">R$ 2.450,00</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button onclick="selectProductForOrder('Meja Kerja L Home Office - R$ 2.450,00')" class="w-full bg-wood-700 hover:bg-wood-800 text-white font-semibold py-2 rounded-lg text-xs transition-colors flex items-center justify-center gap-2">
+                                    <i class="fa-solid fa-cart-plus"></i> Pesan Model Ini
+                                </button>
+                            </div>
+
+                            <!-- Item 4.2 -->
+                            <div class="border border-stone-200 rounded-xl p-5 hover:border-wood-500 transition-all flex flex-col justify-between bg-stone-50/50">
+                                <div>
+                                    <div class="flex justify-between items-start mb-3">
+                                        <h4 class="font-bold text-stone-900 text-lg">Kabinet Wastafel Tahan Air</h4>
+                                        <span class="bg-stone-200 text-stone-700 text-[0.7rem] font-bold px-2 py-1 rounded-md uppercase">MDF Ultra</span>
+                                    </div>
+                                    <p class="text-xs text-stone-600 mb-4 leading-relaxed">
+                                        Kabinet gantung berbahan MDF anti-kelembapan (hidrofobik) dengan keranjang pakaian kotor & cermin penyimpanan.
+                                    </p>
+                                    <div class="bg-white p-3 rounded-lg border border-stone-200 text-xs space-y-1.5 mb-4">
+                                        <div class="flex justify-between text-stone-600">
+                                            <span>MDF Tahan Air + Cermin:</span>
+                                            <span class="font-semibold text-stone-800">R$ 1.400,00</span>
+                                        </div>
+                                        <div class="flex justify-between text-stone-600">
+                                            <span>Jasa Pembuatan & Pemasangan:</span>
+                                            <span class="font-semibold text-stone-800">R$ 600,00</span>
+                                        </div>
+                                        <div class="flex justify-between font-bold text-stone-900 border-t pt-1.5 text-sm">
+                                            <span>Total Estimasi Biaya:</span>
+                                            <span class="text-wood-700">R$ 2.000,00</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button onclick="selectProductForOrder('Kabinet Wastafel Tahan Air - R$ 2.000,00')" class="w-full bg-wood-700 hover:bg-wood-800 text-white font-semibold py-2 rounded-lg text-xs transition-colors flex items-center justify-center gap-2">
+                                    <i class="fa-solid fa-cart-plus"></i> Pesan Model Ini
+                                </button>
+                            </div>
+
+                            <!-- Item 4.3 -->
+                            <div class="border border-stone-200 rounded-xl p-5 hover:border-wood-500 transition-all flex flex-col justify-between bg-stone-50/50">
+                                <div>
+                                    <div class="flex justify-between items-start mb-3">
+                                        <h4 class="font-bold text-stone-900 text-lg">Furnitur Area Balkon Gourmet</h4>
+                                        <span class="bg-stone-200 text-stone-700 text-[0.7rem] font-bold px-2 py-1 rounded-md uppercase">Gourmet</span>
+                                    </div>
+                                    <p class="text-xs text-stone-600 mb-4 leading-relaxed">
+                                        Kabinet bawah untuk pemanggang/BBQ, meja servis, dan rak gantung bumbu serta aksesoris minuman.
+                                    </p>
+                                    <div class="bg-white p-3 rounded-lg border border-stone-200 text-xs space-y-1.5 mb-4">
+                                        <div class="flex justify-between text-stone-600">
+                                            <span>MDF + Engsel Stainless Steel:</span>
+                                            <span class="font-semibold text-stone-800">R$ 2.800,00</span>
+                                        </div>
+                                        <div class="flex justify-between text-stone-600">
+                                            <span>Jasa Pembuatan & Pemasangan:</span>
+                                            <span class="font-semibold text-stone-800">R$ 1.100,00</span>
+                                        </div>
+                                        <div class="flex justify-between font-bold text-stone-900 border-t pt-1.5 text-sm">
+                                            <span>Total Estimasi Biaya:</span>
+                                            <span class="text-wood-700">R$ 3.900,00</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button onclick="selectProductForOrder('Furnitur Area Balkon Gourmet - R$ 3.900,00')" class="w-full bg-wood-700 hover:bg-wood-800 text-white font-semibold py-2 rounded-lg text-xs transition-colors flex items-center justify-center gap-2">
+                                    <i class="fa-solid fa-cart-plus"></i> Pesan Model Ini
+                                </button>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </section>
+
+        <!-- TAB 3: TABELA DE MÃO DE OBRA (BIAYA TENAGA KERJA) -->
+        <section id="tab-content-maodeobra" class="tab-content hidden py-12">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                
+                <div class="text-center max-w-3xl mx-auto mb-10">
+                    <span class="text-xs font-bold text-wood-700 uppercase tracking-widest block mb-2">Transparansi Harga</span>
+                    <h2 class="text-3xl font-serif font-bold text-stone-900">Tabel Acuan Biaya Tenaga Kerja</h2>
+                    <p class="text-stone-600 text-sm mt-2">
+                        Tarif terpisah untuk jasa teknis pembuatan, pengukuran lokasi, hingga pemasangan furnitur.
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+                    
+                    <div class="bg-white p-6 rounded-2xl border border-stone-200 shadow-sm flex flex-col justify-between">
+                        <div>
+                            <div class="w-12 h-12 bg-wood-100 text-wood-800 rounded-xl flex items-center justify-center text-xl mb-4">
+                                <i class="fa-solid fa-pen-ruler"></i>
+                            </div>
+                            <h3 class="font-bold text-stone-900 text-lg mb-1">Pengukuran & Desain 3D</h3>
+                            <p class="text-stone-500 text-xs mb-4">Survei ke lokasi untuk pengambilan ukuran rinci dan penyusunan gambar rancangan 3D.</p>
+                        </div>
+                        <div class="bg-stone-50 p-3 rounded-lg border border-stone-200">
+                            <span class="text-[0.7rem] text-stone-500 uppercase font-bold block">Biaya Layanan</span>
+                            <span class="text-xl font-extrabold text-wood-700">R$ 250,00</span>
+                            <span class="text-[0.65rem] text-stone-500 block mt-1">(Dipotong dari total jika proyek disepakati)</span>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-2xl border border-stone-200 shadow-sm flex flex-col justify-between">
+                        <div>
+                            <div class="w-12 h-12 bg-wood-100 text-wood-800 rounded-xl flex items-center justify-center text-xl mb-4">
+                                <i class="fa-solid fa-saw-blade"></i>
+                            </div>
+                            <h3 class="font-bold text-stone-900 text-lg mb-1">Jasa Pembuatan (Produksi)</h3>
+                            <p class="text-stone-500 text-xs mb-4">Pemotongan papan, pengeboran, pelapisan tepi, dan perakitan awal di workshop.</p>
+                        </div>
+                        <div class="bg-stone-50 p-3 rounded-lg border border-stone-200">
+                            <span class="text-[0.7rem] text-stone-500 uppercase font-bold block">Dihitung per Luas</span>
+                            <span class="text-xl font-extrabold text-wood-700">R$ 280,00 / m²</span>
+                            <span class="text-[0.65rem] text-stone-500 block mt-1">(Berdasarkan meter persegi papan MDF yang diproses)</span>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-2xl border border-stone-200 shadow-sm flex flex-col justify-between">
+                        <div>
+                            <div class="w-12 h-12 bg-wood-100 text-wood-800 rounded-xl flex items-center justify-center text-xl mb-4">
+                                <i class="fa-solid fa-screwdriver font-bold"></i>
+                            </div>
+                            <h3 class="font-bold text-stone-900 text-lg mb-1">Pemasangan & Instalasi</h3>
+                            <p class="text-stone-500 text-xs mb-4">Pemasangan di dinding, penyetelan presisi pintu & laci, serta pembersihan area.</p>
+                        </div>
+                        <div class="bg-stone-50 p-3 rounded-lg border border-stone-200">
+                            <span class="text-[0.7rem] text-stone-500 uppercase font-bold block">Dihitung per Luas</span>
+                            <span class="text-xl font-extrabold text-wood-700">R$ 150,00 / m²</span>
+                            <span class="text-[0.65rem] text-stone-500 block mt-1">(Dikerjakan oleh tim pemasang internal kami)</span>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-2xl border border-stone-200 shadow-sm flex flex-col justify-between">
+                        <div>
+                            <div class="w-12 h-12 bg-wood-100 text-wood-800 rounded-xl flex items-center justify-center text-xl mb-4">
+                                <i class="fa-solid fa-wrench"></i>
+                            </div>
+                            <h3 class="font-bold text-stone-900 text-lg mb-1">Renovasi & Penyesuaian</h3>
+                            <p class="text-stone-500 text-xs mb-4">Penggantian engsel/rel lama dan penyesuaian dudukan untuk perangkat elektronik baru.</p>
+                        </div>
+                        <div class="bg-stone-50 p-3 rounded-lg border border-stone-200">
+                            <span class="text-[0.7rem] text-stone-500 uppercase font-bold block">Mulai dari</span>
+                            <span class="text-xl font-extrabold text-wood-700">R$ 180,00</span>
+                            <span class="text-[0.65rem] text-stone-500 block mt-1">(Tarif kunjungan perbaikan lokasi)</span>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="bg-wood-900 text-white rounded-2xl p-8 text-center max-w-2xl mx-auto">
+                    <h3 class="font-serif font-bold text-xl mb-2">Ingin Estimasi Gabungan Bahan + Jasa Pembuatan?</h3>
+                    <p class="text-wood-200 text-sm mb-6">Isi formulir kami dan kami akan mengkalkulasikan estimasi rinci untuk ruangan Anda.</p>
+                    <button onclick="switchTab('pedido')" class="bg-wood-500 hover:bg-wood-600 text-white font-bold px-8 py-3 rounded-xl transition-all inline-flex items-center gap-2">
+                        <i class="fa-solid fa-paper-plane"></i> Buka Formulir Pemesanan
+                    </button>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- TAB 4: FORMULÁRIO DE PEDIDO (FORMULIR PEMESANAN ONLINE) -->
+        <section id="tab-content-pedido" class="tab-content hidden py-12">
+            <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+                
+                <div class="bg-white rounded-2xl shadow-xl border border-stone-200 overflow-hidden flex flex-col md:flex-row">
+                    
+                    <!-- Form Sidebar Info -->
+                    <div class="bg-wood-900 text-white p-8 md:w-2/5 flex flex-col justify-between">
+                        <div>
+                            <span class="text-xs font-bold text-wood-300 uppercase tracking-widest block mb-2">Layanan Langsung</span>
+                            <h3 class="text-2xl font-serif font-bold mb-4">Buat Pesanan Online</h3>
+                            <p class="text-wood-200 text-sm leading-relaxed mb-6">
+                                Isi formulir di bawah ini dengan informasi Anda beserta rincian furnitur yang Anda inginkan. Tim teknis kami akan menghubungi Anda dengan estimasi penawaran lengkap.
+                            </p>
+
+                            <div class="space-y-4 border-t border-wood-800 pt-6 text-xs text-wood-200">
+                                <div class="flex items-start gap-3">
+                                    <i class="fa-solid fa-location-dot text-wood-400 text-base mt-0.5"></i>
+                                    <div>
+                                        <strong class="text-white block">Alamat Bengkel Kayu:</strong>
+                                        Rua Washington de Souza Carvalho, nº 8<br>Parque Industrial José Belinati - Londrina/PR
+                                    </div>
+                                </div>
+
+                                <div class="flex items-start gap-3">
+                                    <i class="fa-solid fa-file-contract text-wood-400 text-base mt-0.5"></i>
+                                    <div>
+                                        <strong class="text-white block">Legalitas Perusahaan:</strong>
+                                        Movelaria Tradição LTDA<br>CNPJ: 00.799.330/0001-99
+                                    </div>
+                                </div>
+
+                                <div class="flex items-start gap-3">
+                                    <i class="fa-solid fa-shield-halved text-wood-400 text-base mt-0.5"></i>
+                                    <div>
+                                        <strong class="text-white block">Layanan Terjamin:</strong>
+                                        Semua pesanan yang dikirim melalui formulir ini dicatat dan ditindaklanjuti secara resmi.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-8 pt-4 border-t border-wood-800 text-[0.7rem] text-wood-400">
+                            © Marcenaria Tradição • Penjualan Langsung
+                        </div>
+                    </div>
+
+                    <!-- Form Content -->
+                    <div class="p-8 md:w-3/5 bg-white">
+                        <h4 class="text-xl font-bold text-stone-900 mb-6 flex items-center gap-2">
+                            <i class="fa-solid fa-clipboard-list text-wood-700"></i> Formulir Permintaan Penawaran
+                        </h4>
+
+                        <form id="orderForm" onsubmit="handleFormSubmit(event)" class="space-y-5">
+                            
+                            <!-- Nama Lengkap -->
+                            <div>
+                                <label for="nome" class="block text-xs font-bold uppercase text-stone-700 mb-1">Nama Lengkap *</label>
+                                <input type="text" id="nome" required class="w-full px-4 py-2.5 rounded-lg border border-stone-300 focus:ring-2 focus:ring-wood-500 focus:border-wood-500 outline-none transition-all text-sm" placeholder="Tuliskan nama lengkap Anda">
+                            </div>
+
+                            <!-- Telepon & Email -->
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <label for="telefone" class="block text-xs font-bold uppercase text-stone-700 mb-1">Nomor Telepon / WA *</label>
+                                    <input type="tel" id="telefone" required class="w-full px-4 py-2.5 rounded-lg border border-stone-300 focus:ring-2 focus:ring-wood-500 focus:border-wood-500 outline-none transition-all text-sm" placeholder="(00) 00000-0000">
+                                </div>
+                                <div>
+                                    <label for="email" class="block text-xs font-bold uppercase text-stone-700 mb-1">Alamat Email *</label>
+                                    <input type="email" id="email" required class="w-full px-4 py-2.5 rounded-lg border border-stone-300 focus:ring-2 focus:ring-wood-500 focus:border-wood-500 outline-none transition-all text-sm" placeholder="emailanda@contoh.com">
+                                </div>
+                            </div>
+
+                            <!-- Kategori Furnitur -->
+                            <div>
+                                <label for="tipo_ambiente" class="block text-xs font-bold uppercase text-stone-700 mb-1">Jenis Furnitur / Ruangan *</label>
+                                <select id="tipo_ambiente" required class="w-full px-4 py-2.5 rounded-lg border border-stone-300 focus:ring-2 focus:ring-wood-500 focus:border-wood-500 outline-none transition-all text-sm bg-white">
+                                    <option value="" disabled selected>Pilih salah satu...</option>
+                                    <option value="Dapur Custom">Dapur Custom (Cozinha)</option>
+                                    <option value="Lemari Pakaian / Closet">Lemari Pakaian / Walk-in Closet</option>
+                                    <option value="Panel TV / Ruang Tamu">Panel TV / Ruang Keluarga</option>
+                                    <option value="Kabinet Kamar Mandi">Kabinet / Rak Kamar Mandi</option>
+                                    <option value="Meja & Furnitur Kantor">Meja Kerja / Furnitur Kantor</option>
+                                    <option value="Area Balkon Gourmet">Area Balkon Gourmet / BBQ</option>
+                                    <option value="Model Spesifik dari Katalog">Model Spesifik dari Katalog</option>
+                                    <option value="Layanan Custom Lainnya">Layanan Kustom Lainnya</option>
+                                </select>
+                            </div>
+
+                            <!-- Kota / Area -->
+                            <div>
+                                <label for="cidade" class="block text-xs font-bold uppercase text-stone-700 mb-1">Kota / Area Pengiriman *</label>
+                                <input type="text" id="cidade" required class="w-full px-4 py-2.5 rounded-lg border border-stone-300 focus:ring-2 focus:ring-wood-500 focus:border-wood-500 outline-none transition-all text-sm" placeholder="Contoh: Londrina - Pusat">
+                            </div>
+
+                            <!-- Detail Pesanan -->
+                            <div>
+                                <label for="mensagem" class="block text-xs font-bold uppercase text-stone-700 mb-1">Detail Pesanan & Ukuran Perkiraan *</label>
+                                <textarea id="mensagem" rows="4" required class="w-full px-4 py-2.5 rounded-lg border border-stone-300 focus:ring-2 focus:ring-wood-500 focus:border-wood-500 outline-none transition-all text-sm resize-none" placeholder="Jelaskan kebutuhan furnitur Anda, pilihan warna papan MDF, atau estimasi ukuran ruangan..."></textarea>
+                            </div>
+
+                            <!-- Submit Button -->
+                            <button type="submit" id="submitBtn" class="w-full bg-wood-700 hover:bg-wood-800 text-white font-bold py-3.5 px-6 rounded-xl shadow-lg transition-all flex justify-center items-center gap-2 text-sm">
+                                <span>Kirim Pesanan untuk Dianalisis</span>
+                                <i class="fa-solid fa-paper-plane"></i>
+                            </button>
+                        </form>
+                    </div>
+
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-wood-950 text-stone-400 py-10 border-t-4 border-wood-700 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                
+                <div class="space-y-2">
+                    <div class="flex items-center gap-2 text-white font-serif font-bold text-xl">
+                        <i class="fa-solid fa-tree text-wood-500"></i> Marcenaria Tradição
+                    </div>
+                    <p class="text-xs text-stone-400 leading-relaxed">
+                        Seni dan keunggulan pembuatan perabotan kayu custom. Desain, produksi, dan instalasi profesional.
+                    </p>
+                    <p class="text-xs text-wood-400 font-bold">CNPJ: 00.799.330/0001-99</p>
+                </div>
+
+                <div>
+                    <h4 class="text-white font-bold text-sm uppercase mb-3">Lokasi Bengkel</h4>
+                    <p class="text-xs text-stone-400 leading-relaxed">
+                        Rua Washington de Souza Carvalho, nº 8<br>
+                        Parque Industrial José Belinati<br>
+                        Londrina - PR
+                    </p>
+                </div>
+
+                <div>
+                    <h4 class="text-white font-bold text-sm uppercase mb-3">Layanan Online</h4>
+                    <p class="text-xs text-stone-400 leading-relaxed mb-2">
+                        Kirimkan pesanan atau permintaan penawaran harga Anda secara langsung melalui situs web.
+                    </p>
+                    <button onclick="switchTab('pedido')" class="bg-wood-800 hover:bg-wood-700 text-white text-xs px-3 py-1.5 rounded border border-wood-600 transition-colors">
+                        Buka Formulir Pesanan
+                    </button>
+                </div>
+
+            </div>
+
+            <div class="border-t border-wood-900 mt-8 pt-6 text-center text-xs text-stone-500">
+                &copy; 2026 Marcenaria Tradição - Movelaria Tradição LTDA. Hak Cipta Dilindungi Undang-Undang.
+            </div>
+        </div>
+    </footer>
+
+    <!-- Toast Notification -->
+    <div id="toast">
+        <i class="fa-solid fa-circle-check text-green-400 mr-2"></i> Pesanan berhasil dikirim! Kami akan segera menghubungi Anda.
+    </div>
+
+    <!-- Interactive JavaScript -->
+    <script>
+        // Function to switch active tabs
+        function switchTab(tabId) {
+            // Hide all tab content
+            const contents = document.querySelectorAll('.tab-content');
+            contents.forEach(content => {
+                content.classList.add('hidden');
+                content.classList.remove('block');
+            });
+
+            // Remove active style from all desktop nav buttons
+            const buttons = document.querySelectorAll('.tab-btn');
+            buttons.forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // Show selected tab content
+            const targetContent = document.getElementById(`tab-content-${tabId}`);
+            if (targetContent) {
+                targetContent.classList.remove('hidden');
+                targetContent.classList.add('block');
+            }
+
+            // Highlight corresponding button
+            const targetBtn = document.getElementById(`nav-${tabId}`);
+            if (targetBtn) {
+                targetBtn.classList.add('active');
+            }
+
+            // Scroll top smoothly
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Toggle mobile menu drawer
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        document.getElementById('mobile-menu-btn').addEventListener('click', toggleMobileMenu);
+
+        // Select product and navigate to order tab with pre-filled message in Indonesian
+        function selectProductForOrder(productInfo) {
+            const mensagemInput = document.getElementById('mensagem');
+            const tipoAmbienteSelect = document.getElementById('tipo_ambiente');
+
+            if (tipoAmbienteSelect) {
+                tipoAmbienteSelect.value = 'Model Spesifik dari Katalog';
+            }
+
+            if (mensagemInput) {
+                mensagemInput.value = `Saya ingin memesan model furnitur berikut dari katalog situs: ${productInfo}. Mohon hubungi saya untuk menentukan ukuran presisi dan rincian teknisnya.`;
+            }
+
+            // Switch to Pedido tab
+            switchTab('pedido');
+        }
+
+        // Form Submission Handler
+        function handleFormSubmit(event) {
+            event.preventDefault();
+
+            const btn = document.getElementById('submitBtn');
+            const originalText = btn.innerHTML;
+
+            // Loading state
+            btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Memproses Pesanan...';
+            btn.disabled = true;
+            btn.classList.add('opacity-75');
+
+            setTimeout(() => {
+                // Show toast
+                const toast = document.getElementById('toast');
+                toast.classList.add('show');
+
+                // Reset form
+                document.getElementById('orderForm').reset();
+
+                // Reset button
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+                btn.classList.remove('opacity-75');
+
+                // Hide toast after 4 seconds
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 4000);
+
+            }, 1200);
+        }
+
+        // Phone input formatter mask
+        const phoneInput = document.getElementById('telefone');
+        if (phoneInput) {
+            phoneInput.addEventListener('input', function (e) {
+                let x = e.target.value.replace(/\D/g, '').match(/(\d{0,2})(\d{0,5})(\d{0,4})/);
+                e.target.value = !x[2] ? x[1] : '(' + x[1] + ') ' + x[2] + (x[3] ? '-' + x[3] : '');
+            });
+        }
+    </script>
+</body>
+</html>
+
+```
